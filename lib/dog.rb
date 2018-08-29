@@ -132,10 +132,13 @@ def self.find_by_name(name)
   SELECT *
   FROM dogs
   WHERE name = ?
+  LIMIT 1
   SQL
 
-  new_dog = DB[:conn].execute(sql, name ).first
-    Dog.new(id:new_dog[0], name:new_dog[1], breed:new_dog[2])
+  new_dog = DB[:conn].execute(sql, name).map do |row|
+    self.new_from_db(row)
+    # Dog.new(id:new_dog[0], name:new_dog[1], breed:new_dog[2])
+end.first
 end
 
 
